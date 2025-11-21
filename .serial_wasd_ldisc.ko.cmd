@@ -1,0 +1,1 @@
+savedcmd_/home/pi/input_event/serial_wasd_ldisc.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/pi/input_event/serial_wasd_ldisc.ko /home/pi/input_event/serial_wasd_ldisc.o /home/pi/input_event/serial_wasd_ldisc.mod.o /home/pi/input_event/.module-common.o
