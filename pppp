@@ -1,0 +1,6 @@
+make
+sudo killall ldattach
+sudo rmmod serial_wasd_ldisc
+sudo insmod serial_wasd_ldisc.ko
+sudo ldattach -d -s 9600 29 /dev/ttyACM1
+
