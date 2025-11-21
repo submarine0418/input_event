@@ -15,6 +15,8 @@ bool a_active = false;
 bool s_active = false;
 bool d_active = false;
 
+unsigned long lastHeartbeat = 0;
+
 void setup() {
   Serial.begin(9600);
   pinMode(PIN_LED, OUTPUT);
@@ -27,11 +29,19 @@ void setup() {
 }
 
 void loop() {
+  // 1. HEARTBEAT: Send a dot every second
+  if (millis() - lastHeartbeat > 1000) {
+    Serial.println("."); // Keeps the connection alive
+    lastHeartbeat = millis();
+    // Flash LED to show we are alive
+    digitalWrite(PIN_LED, HIGH); delay(50); digitalWrite(PIN_LED, LOW);
+  }
+
+  // 2. JOYSTICK LOGIC
   int x = analogRead(PIN_VRX);
   int y = analogRead(PIN_VRY);
 
   // --- Logic for W (UP) ---
-  // Adjust direction (> or <) based on your wiring
   bool w_now = (y > CENTER + THRESHOLD); 
   if (w_now != w_active) {
     sendEvent(w_now ? "W1" : "W0");
@@ -64,8 +74,4 @@ void loop() {
 
 void sendEvent(const char* msg) {
   Serial.println(msg);
-  // Flash LED briefly to confirm transmission
-  digitalWrite(PIN_LED, HIGH);
-  delay(10);
-  digitalWrite(PIN_LED, LOW);
 }
