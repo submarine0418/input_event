@@ -30,32 +30,39 @@ void loop() {
   bool d_now = (x > CENTER + THRESHOLD);
   bool a_now = (x < CENTER - THRESHOLD);
 
-
+  // --- D (Right) ---
   if (d_now && !d_active) {
-    Serial.println("D");
+    Serial.println("D1\\n"); // Send Press
     d_active = true;
   } else if (!d_now && d_active) {
+    Serial.println("D0\\n"); // Send Release
     d_active = false;
   }
 
+  // --- S (Down) ---
   if (s_now && !s_active) {
-    Serial.println("S");
+    Serial.println("S1\\n");
     s_active = true;
   } else if (!s_now && s_active) {
+    Serial.println("S0\\n");
     s_active = false;
   }
 
+  // --- A (Left) ---
   if (a_now && !a_active) {
-    Serial.println("A");
+    Serial.println("A1\\n");
     a_active = true;
   } else if (!a_now && a_active) {
+    Serial.println("A0\\n");
     a_active = false;
   }
 
+  // --- W (Up) ---
   if (w_now && !w_active) {
-    Serial.println("W");
+    Serial.println("W1\\n");
     w_active = true;
   } else if (!w_now && w_active) {
+    Serial.println("W0\\n");
     w_active = false;
   }
 
