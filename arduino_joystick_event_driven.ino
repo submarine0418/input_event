@@ -5,10 +5,10 @@
 
 const int PIN_VRX = A0;  // X 軸
 const int PIN_VRY = A1;  // Y 軸
+const int PIN_LED = 13; // Visual feedback
 
 const int CENTER = 512;
-const int THRESHOLD = 200;     // 超出中心 ±200 才算移動
-const int SAMPLE_INTERVAL_MS = 100;
+const int THRESHOLD = 300; // Increased threshold to avoid noise
 
 bool w_active = false;
 bool a_active = false;
@@ -17,54 +17,55 @@ bool d_active = false;
 
 void setup() {
   Serial.begin(9600);
-  delay(10);
-  Serial.println("Arduino WASD One-Shot Ready");
+  pinMode(PIN_LED, OUTPUT);
+  
+  // Flash LED 3 times on startup to show we are alive
+  for(int i=0; i<3; i++) {
+    digitalWrite(PIN_LED, HIGH); delay(100);
+    digitalWrite(PIN_LED, LOW);  delay(100);
+  }
 }
 
 void loop() {
   int x = analogRead(PIN_VRX);
   int y = analogRead(PIN_VRY);
 
-  bool w_now = (y > CENTER + THRESHOLD);
+  // --- Logic for W (UP) ---
+  // Adjust direction (> or <) based on your wiring
+  bool w_now = (y > CENTER + THRESHOLD); 
+  if (w_now != w_active) {
+    sendEvent(w_now ? "W1" : "W0");
+    w_active = w_now;
+  }
+
+  // --- Logic for S (DOWN) ---
   bool s_now = (y < CENTER - THRESHOLD);
-  bool d_now = (x > CENTER + THRESHOLD);
+  if (s_now != s_active) {
+    sendEvent(s_now ? "S1" : "S0");
+    s_active = s_now;
+  }
+
+  // --- Logic for A (LEFT) ---
   bool a_now = (x < CENTER - THRESHOLD);
-
-  // --- D (Right) ---
-  if (d_now && !d_active) {
-    Serial.println("D1\\n"); // Send Press
-    d_active = true;
-  } else if (!d_now && d_active) {
-    Serial.println("D0\\n"); // Send Release
-    d_active = false;
+  if (a_now != a_active) {
+    sendEvent(a_now ? "A1" : "A0");
+    a_active = a_now;
   }
 
-  // --- S (Down) ---
-  if (s_now && !s_active) {
-    Serial.println("S1\\n");
-    s_active = true;
-  } else if (!s_now && s_active) {
-    Serial.println("S0\\n");
-    s_active = false;
+  // --- Logic for D (RIGHT) ---
+  bool d_now = (x > CENTER + THRESHOLD);
+  if (d_now != d_active) {
+    sendEvent(d_now ? "D1" : "D0");
+    d_active = d_now;
   }
 
-  // --- A (Left) ---
-  if (a_now && !a_active) {
-    Serial.println("A1\\n");
-    a_active = true;
-  } else if (!a_now && a_active) {
-    Serial.println("A0\\n");
-    a_active = false;
-  }
+  delay(20); // Small delay for stability
+}
 
-  // --- W (Up) ---
-  if (w_now && !w_active) {
-    Serial.println("W1\\n");
-    w_active = true;
-  } else if (!w_now && w_active) {
-    Serial.println("W0\\n");
-    w_active = false;
-  }
-
-  delay(SAMPLE_INTERVAL_MS);
+void sendEvent(const char* msg) {
+  Serial.println(msg);
+  // Flash LED briefly to confirm transmission
+  digitalWrite(PIN_LED, HIGH);
+  delay(10);
+  digitalWrite(PIN_LED, LOW);
 }
