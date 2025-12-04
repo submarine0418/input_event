@@ -1,4 +1,4 @@
-Linux Kernel TTY Line Discipline Driver for Arduino Joystick
+# Linux Kernel TTY Line Discipline Driver for Arduino Joystick
 
 ![License](https://img.shields.io/badge/license-GPL-blue.svg)
 ![Kernel](https://img.shields.io/badge/kernel-6.12+-green.svg)
@@ -45,7 +45,7 @@ Arduino Joystick → UART/USB → TTY Driver → Line Discipline #29 → Input S
 ### 1. Build the Module
 ```bash
 # Clone the repository
-git clone https://github.com/submarine0418/input_event.git
+git clone https://github.com/yourusername/linux-kernel-joystick-driver.git
 cd linux-kernel-joystick-driver
 
 # Compile
@@ -260,14 +260,11 @@ See the Linux kernel's [COPYING](https://www.kernel.org/doc/html/latest/process/
 ## 👤 Author
 
 **Austin Chen (陳彥廷)**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@submarine0418](https://github.com/submarine0418)
+- Email: austin770115@gmail.com.com
 
 ---
 
 ⭐ If you find this project useful, please consider giving it a star!
 
 💡 **Use Case**: This driver was developed as part of a research project for real-time parameter adjustment of underwater image enhancement algorithms (DCP dehazing) at National Taiwan University.
-
-## License
-GPL
