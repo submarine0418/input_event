@@ -1,4 +1,4 @@
-# Linux Kernel TTY Line Discipline Driver for Arduino Joystick
+Linux Kernel TTY Line Discipline Driver for Arduino Joystick
 
 ![License](https://img.shields.io/badge/license-GPL-blue.svg)
 ![Kernel](https://img.shields.io/badge/kernel-6.12+-green.svg)
