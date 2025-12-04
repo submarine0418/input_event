@@ -45,8 +45,8 @@ Arduino Joystick → UART/USB → TTY Driver → Line Discipline #29 → Input S
 ### 1. Build the Module
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/linux-kernel-joystick-driver.git
-cd linux-kernel-joystick-driver
+git clone https://github.com/submarine0418/input_event.git
+
 
 # Compile
 make
