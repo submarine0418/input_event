@@ -1,4 +1,4 @@
-// serial_wasd_ldisc.c
+
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -22,12 +22,11 @@ struct swd_dev {
     int buf_len;
 };
 
-/* ==================== Key Event Parser ==================== */
+
 static void swd_parse_line(struct swd_dev *swd, const char *line)
 {
     if (!swd || !swd->input) return;
 
-    // Ignore the heartbeat dot
     if (line[0] == '.') return;
 
     char key = line[0];
@@ -46,7 +45,7 @@ static void swd_parse_line(struct swd_dev *swd, const char *line)
     input_sync(swd->input);
 }
 
-/* ==================== LDISC Open ==================== */
+
 static int swd_open(struct tty_struct *tty)
 {
     struct swd_dev *swd;
@@ -82,11 +81,10 @@ static int swd_open(struct tty_struct *tty)
 
     tty->disc_data = swd;
     
-    // --- THE MISSING LINE ---
-    // Tell the TTY layer we can accept data!
+   
     tty->receive_room = 65536; 
 
-    // --- FORCE HARDWARE SETTINGS ---
+   
     old_termios = tty->termios;
     tty->termios.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
     tty->termios.c_oflag &= ~OPOST;
@@ -100,10 +98,9 @@ static int swd_open(struct tty_struct *tty)
     return 0;
 }
 
-/* ==================== LDISC Close ==================== */
 static void swd_close(struct tty_struct *tty)
 {
-    // Retrieve the structure from the TTY
+
     struct swd_dev *swd = (struct swd_dev *)tty->disc_data;
 
     if (swd) {
@@ -112,24 +109,22 @@ static void swd_close(struct tty_struct *tty)
         kfree(swd);
     }
     
-    tty->disc_data = NULL; // Prevent use-after-free
+    tty->disc_data = NULL; 
     pr_info("swd: close\n");
 }
 
-/* ==================== Receive Serial Data ==================== */
 static void swd_receive_buf(struct tty_struct *tty, const u8 *cp, const u8 *fp, size_t count)
 {
     struct swd_dev *swd = (struct swd_dev *)tty->disc_data;
     size_t i;
 
-    // Safety check: If data comes in after close, ignore it
     if (!swd) return;
 
     spin_lock(&swd->lock);
     for (i = 0; i < count; ++i) {
         char c = cp[i];
         
-        // DEBUG PRINT: Show every character received
+        
         pr_info("swd: recv '%c' (0x%02x)\n", (c >= 32 && c <= 126) ? c : '.', c);
 
         if (c == '\r') continue;
@@ -145,7 +140,7 @@ static void swd_receive_buf(struct tty_struct *tty, const u8 *cp, const u8 *fp, 
     spin_unlock(&swd->lock);
 }
 
-/* ==================== Register LDISC ==================== */
+
 static struct tty_ldisc_ops swd_ldisc = {
     .owner = THIS_MODULE,
     .num = MY_LDISC,
@@ -157,7 +152,7 @@ static struct tty_ldisc_ops swd_ldisc = {
 
 static int __init swd_init(void)
 {
-    // NEW API: Pass only the struct pointer
+    
     int ret = tty_register_ldisc(&swd_ldisc);
     
     if (ret) {
@@ -170,7 +165,7 @@ static int __init swd_init(void)
 
 static void __exit swd_exit(void)
 {
-    // NEW API: Pass only the struct pointer
+   
     tty_unregister_ldisc(&swd_ldisc);
     pr_info("swd: exit\n");
 }
