@@ -11,7 +11,7 @@
 #define MY_LDISC 29
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Student");
+MODULE_AUTHOR("austin");
 MODULE_DESCRIPTION("WASD Serial Line Discipline");
 
 struct swd_dev {
